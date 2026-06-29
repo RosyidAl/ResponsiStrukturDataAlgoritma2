@@ -2,19 +2,20 @@ import java.util.Scanner;
 import java.text.NumberFormat;
 import java.util.Locale;
 
-/**
- * Class POSApp - Aplikasi utama Point of Sale System
- * 
- * Menyediakan antarmuka CLI interaktif untuk sistem kasir.
- * Menghubungkan semua komponen: ProductManager, QueueManager, TransactionManager.
- * 
- * Ringkasan Struktur Data yang digunakan:
- * 1. HashMap<String, Product>   -> pencarian produk by ID,     O(1) average
- * 2. ArrayList + Binary Search  -> pencarian produk by nama,   O(log n)
- * 3. Queue (LinkedList)         -> antrean pelanggan FIFO,     O(1) enqueue/dequeue
- * 4. Stack<CartItem>            -> keranjang belanja + undo,   O(1) push/pop
- * 5. ArrayList<Transaction>     -> riwayat transaksi,          O(1) add
- */
+/*
+Class POSApp - Aplikasi utama Point of Sale System
+ 
+Menyediakan antarmuka CLI interaktif untuk sistem kasir.
+Menghubungkan semua komponen: ProductManager, QueueManager, TransactionManager.
+ 
+Ringkasan Struktur Data yang digunakan:
+1. HashMap<String, Product>   -> pencarian produk by ID,     O(1) average
+2. ArrayList + Binary Search  -> pencarian produk by nama,   O(log n)
+3. Queue (LinkedList)         -> antrean pelanggan FIFO,     O(1) enqueue/dequeue*
+4. Stack<CartItem>            -> keranjang belanja + undo,   O(1) push/pop
+5. ArrayList<Transaction>     -> riwayat transaksi,          O(1) add
+*/
+
 public class POSApp {
 
     private static Scanner scanner = new Scanner(System.in);
@@ -22,7 +23,7 @@ public class POSApp {
     private static QueueManager queueManager = new QueueManager();
     private static TransactionManager trxManager = new TransactionManager();
     private static NumberFormat rupiahFormat = NumberFormat.getCurrencyInstance(
-            new Locale("id", "ID"));
+            Locale.of("id", "ID"));
 
     // ==================== MAIN METHOD ====================
 
@@ -136,10 +137,11 @@ public class POSApp {
         }
     }
 
-    /**
-     * Pencarian produk berdasarkan ID.
-     * Menggunakan HashMap -> O(1) average case
-     */
+    /*
+    Pencarian produk berdasarkan ID.
+    Menggunakan HashMap -> O(1) average case
+    */
+
     private static void cariProdukById() {
         System.out.print("  Masukkan ID Produk: ");
         String id = scanner.nextLine().trim();
@@ -159,10 +161,11 @@ public class POSApp {
         }
     }
 
-    /**
-     * Pencarian produk berdasarkan nama.
-     * Menggunakan Binary Search pada sorted ArrayList -> O(log n)
-     */
+    /*
+    Pencarian produk berdasarkan nama.
+    Menggunakan Binary Search pada sorted ArrayList -> O(log n)
+    */
+
     private static void cariProdukByNama() {
         System.out.print("  Masukkan Nama Produk: ");
         String nama = scanner.nextLine().trim();
@@ -183,9 +186,10 @@ public class POSApp {
         }
     }
 
-    /**
-     * Helper method untuk menampilkan 1 produk dalam format tabel
-     */
+    /*
+    Helper method untuk menampilkan 1 produk dalam format tabel
+    */
+    
     private static void tampilkanSatuProduk(Product p) {
         System.out.println("  +----------+----------------------+-----------------+-------+");
         System.out.println("  | ID       | Nama Produk          | Harga           | Stok  |");
@@ -194,11 +198,12 @@ public class POSApp {
         System.out.println("  +----------+----------------------+-----------------+-------+");
     }
 
-    /**
-     * Menambah produk baru ke dalam sistem.
-     * Input: ID, Nama, Harga, Stok awal
-     * Validasi: ID tidak duplikat, harga > 0, stok >= 0
-     */
+    /*
+    Menambah produk baru ke dalam sistem.
+    Input: ID, Nama, Harga, Stok awal
+    Validasi: ID tidak duplikat, harga > 0, stok >= 0
+    */
+    
     private static void tambahProdukBaru() {
         System.out.println("\n  --- Tambah Produk Baru ---");
 
@@ -267,10 +272,11 @@ public class POSApp {
         }
     }
 
-    /**
-     * Menambah pelanggan baru ke antrean.
-     * Menggunakan Queue.offer() -> O(1)
-     */
+    /*
+    Menambah pelanggan baru ke antrean.
+    Menggunakan Queue.offer() -> O(1)
+    */
+    
     private static void tambahPelanggan() {
         System.out.print("  Nama Pelanggan: ");
         String nama = scanner.nextLine().trim();
@@ -289,15 +295,16 @@ public class POSApp {
 
     // ==================== MENU 3: KASIR ====================
 
-    /**
-     * Menu kasir - melayani pelanggan terdepan dari antrean.
-     * 
-     * Alur:
-     * 1. Ambil pelanggan terdepan dari Queue (dequeue) -> O(1)
-     * 2. Pelanggan bisa tambah item ke keranjang (Stack.push) -> O(1)
-     * 3. Pelanggan bisa void item terakhir (Stack.pop) -> O(1)
-     * 4. Proses pembayaran jika sudah selesai belanja
-     */
+    /*
+    Menu kasir - melayani pelanggan terdepan dari antrean.
+     
+    Alur:
+    1. Ambil pelanggan terdepan dari Queue (dequeue) -> O(1)
+    2. Pelanggan bisa tambah item ke keranjang (Stack.push) -> O(1)
+    3. Pelanggan bisa void item terakhir (Stack.pop) -> O(1)
+    4. Proses pembayaran jika sudah selesai belanja
+    */
+    
     private static void menuKasir() {
         // cek apakah ada pelanggan di antrean
         if (queueManager.isEmpty()) {
@@ -346,17 +353,18 @@ public class POSApp {
         }
     }
 
-    /**
-     * Menambah item ke keranjang belanja pelanggan.
-     * 
-     * Proses:
-     * 1. Input ID produk -> cari di HashMap = O(1)
-     * 2. Input jumlah -> validasi stok
-     * 3. Kurangi stok produk -> O(1)
-     * 4. Push CartItem ke Stack keranjang -> O(1)
-     * 
-     * Total Kompleksitas: O(1) per operasi
-     */
+    /*
+    Menambah item ke keranjang belanja pelanggan.
+     
+    Proses:
+    1. Input ID produk -> cari di HashMap = O(1)
+    2. Input jumlah -> validasi stok
+    3. Kurangi stok produk -> O(1)
+    4. Push CartItem ke Stack keranjang -> O(1)
+     
+    Total Kompleksitas: O(1) per operasi
+    */
+    
     private static void tambahItemKeKeranjang(Customer customer) {
         // Tampilkan daftar menu agar user tidak bingung
         System.out.println("\n  --- Daftar Menu ---");
@@ -413,16 +421,17 @@ public class POSApp {
         System.out.println("  Total sementara: " + rupiahFormat.format(customer.getTotal()));
     }
 
-    /**
-     * Void / Undo item terakhir dari keranjang.
-     * 
-     * Menggunakan Stack.pop() untuk mengambil item paling atas (terakhir masuk).
-     * Stok produk otomatis dikembalikan setelah void.
-     * 
-     * Kompleksitas: O(1)
-     * - Stack.pop() = O(1)
-     * - tambahStok() = O(1)
-     */
+    /*
+    Void / Undo item terakhir dari keranjang.
+     
+    Menggunakan Stack.pop() untuk mengambil item paling atas (terakhir masuk).
+    Stok produk otomatis dikembalikan setelah void.
+     
+    Kompleksitas: O(1)
+    - Stack.pop() = O(1)
+    - tambahStok() = O(1)
+    */
+    
     private static void voidItemTerakhir(Customer customer) {
         // pop dari Stack -> O(1)
         CartItem voided = customer.voidItemTerakhir();
@@ -448,12 +457,13 @@ public class POSApp {
         }
     }
 
-    /**
-     * Menampilkan isi keranjang belanja pelanggan.
-     * Iterasi seluruh Stack untuk menampilkan setiap item.
-     * 
-     * Kompleksitas: O(n) dimana n = jumlah item di keranjang
-     */
+    /*
+    Menampilkan isi keranjang belanja pelanggan.
+    Iterasi seluruh Stack untuk menampilkan setiap item.
+     
+    Kompleksitas: O(n) dimana n = jumlah item di keranjang
+    */
+    
     private static void tampilkanKeranjang(Customer customer) {
         if (customer.keranjangKosong()) {
             System.out.println("  Keranjang kosong.");
@@ -474,11 +484,10 @@ public class POSApp {
                 " (" + customer.jumlahItem() + " item)");
     }
 
-    /**
-     * Proses pembayaran pelanggan.
-     * 
-     * @return true jika transaksi berhasil diproses, false jika gagal
-     */
+    /*
+    Proses pembayaran pelanggan. 
+    @return true jika transaksi berhasil diproses, false jika gagal
+    */
     private static boolean prosesPembayaran(Customer customer) {
         if (customer.keranjangKosong()) {
             System.out.println("  [!] Keranjang kosong! Tambah item terlebih dahulu.");
@@ -522,13 +531,14 @@ public class POSApp {
         return true;
     }
 
-    /**
-     * Batalkan seluruh transaksi pelanggan.
-     * Kembalikan stok untuk semua item yang sudah masuk keranjang.
-     * 
-     * Kompleksitas: O(n) dimana n = jumlah item di keranjang
-     * - Harus iterasi semua item untuk mengembalikan stok masing-masing
-     */
+    /*
+    Batalkan seluruh transaksi pelanggan.
+    Kembalikan stok untuk semua item yang sudah masuk keranjang.
+     
+    Kompleksitas: O(n) dimana n = jumlah item di keranjang
+    - Harus iterasi semua item untuk mengembalikan stok masing-masing
+    */
+    
     private static void batalkanTransaksi(Customer customer) {
         if (!customer.keranjangKosong()) {
             // kembalikan stok untuk setiap item di keranjang
@@ -550,13 +560,14 @@ public class POSApp {
 
     // ==================== UTILITAS INPUT ====================
 
-    /**
-     * Membaca input angka integer dari user dengan validasi.
-     * Jika input bukan angka, akan menampilkan pesan error.
-     * 
-     * @param prompt teks yang ditampilkan sebelum input
-     * @return angka yang diinput user, atau -1 jika invalid
-     */
+    /*
+    Membaca input angka integer dari user dengan validasi.
+    Jika input bukan angka, akan menampilkan pesan error.
+    
+    @param prompt teks yang ditampilkan sebelum input
+    @return angka yang diinput user, atau -1 jika invalid
+    */
+    
     private static int inputAngka(String prompt) {
         System.out.print("  " + prompt + ": ");
         try {
@@ -568,13 +579,14 @@ public class POSApp {
         }
     }
 
-    /**
-     * Membaca input angka desimal (double) dari user dengan validasi.
-     * Digunakan untuk input harga dan jumlah pembayaran.
-     * 
-     * @param prompt teks yang ditampilkan sebelum input
-     * @return angka desimal yang diinput, atau -1 jika invalid
-     */
+    /*
+    Membaca input angka desimal (double) dari user dengan validasi.
+    Digunakan untuk input harga dan jumlah pembayaran.
+     
+    @param prompt teks yang ditampilkan sebelum input
+    @return angka desimal yang diinput, atau -1 jika invalid
+    */
+    
     private static double inputDouble(String prompt) {
         System.out.print("  " + prompt + ": ");
         try {

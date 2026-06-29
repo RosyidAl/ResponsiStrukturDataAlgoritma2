@@ -3,13 +3,14 @@ import java.util.List;
 import java.text.NumberFormat;
 import java.util.Locale;
 
-/**
- * Class TransactionManager - Mengelola proses transaksi dan menyimpan riwayat
- * 
- * Menggunakan ArrayList<Transaction> untuk riwayat transaksi.
- * Alasan: ArrayList cocok untuk data sequential/kronologis yang
- * terus bertambah (add di akhir = O(1) amortized).
- */
+/*
+Class TransactionManager - Mengelola proses transaksi dan menyimpan riwayat
+ 
+Menggunakan ArrayList<Transaction> untuk riwayat transaksi.
+Alasan: ArrayList cocok untuk data sequential/kronologis yang
+terus bertambah (add di akhir = O(1) amortized).
+*/
+
 public class TransactionManager {
 
     private ArrayList<Transaction> riwayat;   // daftar semua transaksi selesai
@@ -20,20 +21,21 @@ public class TransactionManager {
         counterTransaksi = 0;
     }
 
-    /**
-     * Memproses transaksi pembayaran untuk pelanggan.
-     * Membuat objek Transaction baru dan menyimpannya ke riwayat.
-     * 
-     * Kompleksitas: O(n) dimana n = jumlah item di keranjang
-     * - customer.getSemuaItem() -> copy n item ke ArrayList baru = O(n)
-     * - customer.getTotal() -> iterasi n item = O(n)
-     * - riwayat.add() -> O(1) amortized
-     * - Total: O(n) + O(n) + O(1) = O(n)
-     * 
-     * @param customer pelanggan yang melakukan transaksi
-     * @param bayar jumlah uang yang dibayarkan
-     * @return objek Transaction yang sudah dibuat
-     */
+    /*
+    Memproses transaksi pembayaran untuk pelanggan.
+    Membuat objek Transaction baru dan menyimpannya ke riwayat.
+    
+    Kompleksitas: O(n) dimana n = jumlah item di keranjang
+    - customer.getSemuaItem() -> copy n item ke ArrayList baru = O(n)
+    - customer.getTotal() -> iterasi n item = O(n)
+    - riwayat.add() -> O(1) amortized
+    - Total: O(n) + O(n) + O(1) = O(n)
+    
+    @param customer pelanggan yang melakukan transaksi
+    @param bayar jumlah uang yang dibayarkan
+    @return objek Transaction yang sudah dibuat
+    */
+    
     public Transaction prosesTransaksi(Customer customer, double bayar) {
         double total = customer.getTotal();
         double kembalian = bayar - total;
@@ -55,14 +57,15 @@ public class TransactionManager {
         return trx;
     }
 
-    /**
-     * Mencetak struk/receipt transaksi ke layar CLI.
-     * Iterasi semua item dalam transaksi untuk ditampilkan.
-     * 
-     * Kompleksitas: O(n) dimana n = jumlah item dalam transaksi
-     */
+    /*
+    Mencetak struk/receipt transaksi ke layar CLI.
+    Iterasi semua item dalam transaksi untuk ditampilkan.
+    
+    Kompleksitas: O(n) dimana n = jumlah item dalam transaksi
+    */
+    
     public void tampilkanStruk(Transaction trx) {
-        NumberFormat nf = NumberFormat.getCurrencyInstance(new Locale("id", "ID"));
+        NumberFormat nf = NumberFormat.getCurrencyInstance(Locale.of("id", "ID"));
 
         System.out.println();
         System.out.println("  ================================================");
@@ -100,19 +103,20 @@ public class TransactionManager {
         System.out.println();
     }
 
-    /**
-     * Menampilkan ringkasan seluruh riwayat transaksi dalam bentuk tabel.
-     * Iterasi semua transaksi yang tersimpan.
-     * 
-     * Kompleksitas: O(m) dimana m = jumlah transaksi
-     */
+    /*
+    Menampilkan ringkasan seluruh riwayat transaksi dalam bentuk tabel.
+    Iterasi semua transaksi yang tersimpan.
+    
+    Kompleksitas: O(m) dimana m = jumlah transaksi
+    */
+    
     public void tampilkanRiwayat() {
         if (riwayat.isEmpty()) {
             System.out.println("  Belum ada riwayat transaksi.");
             return;
         }
 
-        NumberFormat nf = NumberFormat.getCurrencyInstance(new Locale("id", "ID"));
+        NumberFormat nf = NumberFormat.getCurrencyInstance(Locale.of("id", "ID"));
 
         System.out.println("+----------+-----------------+-----------------+-----------------------+");
         System.out.println("| ID Trx   | Pelanggan       | Total           | Waktu                 |");
@@ -133,10 +137,11 @@ public class TransactionManager {
         System.out.println("  Total Pendapatan : " + nf.format(grandTotal));
     }
 
-    /**
-     * Mendapatkan jumlah transaksi yang tercatat
-     * Kompleksitas: O(1)
-     */
+    /*
+    Mendapatkan jumlah transaksi yang tercatat
+    Kompleksitas: O(1)
+    */
+    
     public int jumlahTransaksi() {
         return riwayat.size();
     }

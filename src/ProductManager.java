@@ -2,23 +2,23 @@ import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Collections;
 
-/**
- * Class ProductManager - Mengelola seluruh data produk dalam sistem POS
- * 
- * Menggunakan 2 struktur data utama:
- * 
- * 1. HashMap<String, Product> (produkById)
- *    - Untuk pencarian produk berdasarkan ID / barcode
- *    - Key = ID produk, Value = objek Product
- *    - Kompleksitas lookup: O(1) average case
- *    - Alasan: di kasir, pencarian by ID/barcode harus instan
- * 
- * 2. ArrayList<Product> (daftarProduk) - selalu dalam keadaan sorted by nama
- *    - Untuk pencarian produk berdasarkan nama menggunakan Binary Search
- *    - Kompleksitas pencarian: O(log n)
- *    - Alasan: lebih efisien daripada linear search O(n), dan menunjukkan
- *      pemahaman konsep Binary Search
- */
+/*
+Class ProductManager - Mengelola seluruh data produk dalam sistem POS
+ 
+Menggunakan 2 struktur data utama:
+ 
+1. HashMap<String, Product> (produkById)
+   - Untuk pencarian produk berdasarkan ID / barcode
+   - Key = ID produk, Value = objek Product
+   - Kompleksitas lookup: O(1) average case
+   - Alasan: di kasir, pencarian by ID/barcode harus instan
+
+2. ArrayList<Product> (daftarProduk) - selalu dalam keadaan sorted by nama
+   - Untuk pencarian produk berdasarkan nama menggunakan Binary Search
+   - Kompleksitas pencarian: O(log n)
+   - Alasan: lebih efisien daripada linear search O(n), dan menunjukkan pemahaman konsep Binary Search
+*/
+
 public class ProductManager {
 
     private HashMap<String, Product> produkById;     // lookup by ID -> O(1)
@@ -32,45 +32,47 @@ public class ProductManager {
 
     // ==================== PENCARIAN PRODUK ====================
 
-    /**
-     * Mencari produk berdasarkan ID menggunakan HashMap.get()
-     * 
-     * Kompleksitas Waktu: O(1) average case
-     * Penjelasan:
-     * - HashMap menyimpan data dalam bentuk array of buckets
-     * - Saat get(key), Java menghitung hashCode dari key
-     * - hashCode dikonversi menjadi index bucket -> langsung akses
-     * - Tidak perlu iterasi seluruh data seperti linear search
-     * - Worst case O(n) jika terjadi banyak collision, tapi sangat jarang
-     * 
-     * @param id ID produk yang dicari
-     * @return Product jika ditemukan, null jika tidak ada
-     */
+    /*
+    Mencari produk berdasarkan ID menggunakan HashMap.get()
+     
+    Kompleksitas Waktu: O(1) average case
+    Penjelasan:
+    - HashMap menyimpan data dalam bentuk array of buckets
+    - Saat get(key), Java menghitung hashCode dari key
+    - hashCode dikonversi menjadi index bucket -> langsung akses
+    - Tidak perlu iterasi seluruh data seperti linear search
+    - Worst case O(n) jika terjadi banyak collision, tapi sangat jarang
+     
+    @param id ID produk yang dicari
+    @return Product jika ditemukan, null jika tidak ada
+    */
+    
     public Product cariById(String id) {
         return produkById.get(id.toUpperCase());
     }
 
-    /**
-     * Mencari produk berdasarkan nama menggunakan Binary Search (manual).
-     * 
-     * Kompleksitas Waktu: O(log n)
-     * Penjelasan:
-     * - Prasyarat: ArrayList harus sudah sorted berdasarkan nama
-     * - Setiap iterasi, ruang pencarian diperkecil separuhnya
-     * - Contoh: 1000 produk -> max 10 perbandingan (log2(1000) ≈ 10)
-     * 
-     * Cara kerja:
-     * 1. Tentukan batas low dan high
-     * 2. Hitung mid = (low + high) / 2
-     * 3. Bandingkan nama target dengan nama produk di posisi mid
-     *    - Jika sama -> return produk (ketemu)
-     *    - Jika target < mid -> geser high = mid - 1 (cari di kiri)
-     *    - Jika target > mid -> geser low = mid + 1 (cari di kanan)
-     * 4. Ulangi sampai low > high (berarti tidak ditemukan)
-     * 
-     * @param nama nama produk yang dicari (case-insensitive)
-     * @return Product jika ditemukan, null jika tidak ada
-     */
+    /*
+    Mencari produk berdasarkan nama menggunakan Binary Search (manual).
+     
+    Kompleksitas Waktu: O(log n)
+    Penjelasan:
+    - Prasyarat: ArrayList harus sudah sorted berdasarkan nama
+    - Setiap iterasi, ruang pencarian diperkecil separuhnya
+    - Contoh: 1000 produk -> max 10 perbandingan (log2(1000) ≈ 10)
+ 
+    Cara kerja:
+    1. Tentukan batas low dan high
+    2. Hitung mid = (low + high) / 2
+    3. Bandingkan nama target dengan nama produk di posisi mid
+       - Jika sama -> return produk (ketemu)
+       - Jika target < mid -> geser high = mid - 1 (cari di kiri)
+       - Jika target > mid -> geser low = mid + 1 (cari di kanan)
+    4. Ulangi sampai low > high (berarti tidak ditemukan)
+     
+    @param nama nama produk yang dicari (case-insensitive)
+    @return Product jika ditemukan, null jika tidak ada
+    */
+    
     public Product cariByNama(String nama) {
         int low = 0;
         int high = daftarProduk.size() - 1;
@@ -94,19 +96,20 @@ public class ProductManager {
 
     // ==================== KELOLA PRODUK ====================
 
-    /**
-     * Menambah produk baru ke dalam sistem.
-     * 
-     * Kompleksitas Waktu: O(n) 
-     * Penjelasan:
-     * - Insert ke HashMap: O(1) 
-     * - Cari posisi insert di ArrayList pakai binarySearch: O(log n)
-     * - Insert ke ArrayList di posisi tertentu: O(n) karena elemen 
-     *   setelah posisi insert harus digeser ke kanan
-     * - Total: O(1) + O(log n) + O(n) = O(n)
-     * 
-     * @return true jika berhasil, false jika ID sudah ada
-     */
+    /*
+    Menambah produk baru ke dalam sistem.
+     
+    Kompleksitas Waktu: O(n) 
+    Penjelasan:
+    - Insert ke HashMap: O(1) 
+    - Cari posisi insert di ArrayList pakai binarySearch: O(log n)
+    - Insert ke ArrayList di posisi tertentu: O(n) karena elemen 
+      setelah posisi insert harus digeser ke kanan
+    - Total: O(1) + O(log n) + O(n) = O(n)
+    
+    @return true jika berhasil, false jika ID sudah ada
+    */
+
     public boolean tambahProduk(Product produk) {
         // cek duplikat ID
         if (produkById.containsKey(produk.getId().toUpperCase())) {
@@ -128,17 +131,18 @@ public class ProductManager {
         return true;
     }
 
-    /**
-     * Update stok produk berdasarkan ID.
-     * 
-     * Kompleksitas: O(1)
-     * - Lookup produk di HashMap: O(1)
-     * - Update field stok: O(1)
-     * 
-     * @param id ID produk
-     * @param delta perubahan stok (positif = tambah, negatif = kurangi)
-     * @return true jika berhasil
-     */
+    /*
+    Update stok produk berdasarkan ID.
+     
+    Kompleksitas: O(1)
+    - Lookup produk di HashMap: O(1)
+    - Update field stok: O(1)
+     
+    @param id ID produk
+    @param delta perubahan stok (positif = tambah, negatif = kurangi)
+    @return true jika berhasil
+    */
+    
     public boolean updateStok(String id, int delta) {
         Product p = cariById(id);
         if (p == null) return false;
@@ -154,11 +158,12 @@ public class ProductManager {
     // ==================== TAMPILAN ====================
 
     /**
-     * Menampilkan seluruh produk dalam bentuk tabel di CLI.
-     * Iterasi seluruh ArrayList untuk menampilkan data.
-     * 
-     * Kompleksitas: O(n) dimana n = jumlah produk
-     */
+    Menampilkan seluruh produk dalam bentuk tabel di CLI.
+    Iterasi seluruh ArrayList untuk menampilkan data.
+     
+    Kompleksitas: O(n) dimana n = jumlah produk
+    */
+    
     public void tampilkanSemuaProduk() {
         System.out.println("+----------+----------------------+-----------------+-------+");
         System.out.println("| ID       | Nama Produk          | Harga           | Stok  |");
@@ -172,21 +177,22 @@ public class ProductManager {
         System.out.println("  Total: " + daftarProduk.size() + " produk terdaftar");
     }
 
-    /**
-     * Jumlah produk yang terdaftar
-     * Kompleksitas: O(1)
-     */
+    /*
+    Jumlah produk yang terdaftar
+    Kompleksitas: O(1)
+    */
+    
     public int jumlahProduk() {
         return daftarProduk.size();
     }
 
     // ==================== DATA AWAL ====================
 
-    /**
-     * Inisialisasi 15 produk awal untuk kafe/toko.
-     * Produk dimasukkan dalam urutan abjad supaya ArrayList langsung sorted
-     * (karena tambahProduk() juga melakukan sorted insert).
-     */
+    /*
+    Inisialisasi 15 produk awal untuk kafe/toko.
+    Produk dimasukkan dalam urutan abjad supaya ArrayList langsung sorted
+    (karena tambahProduk() juga melakukan sorted insert).
+    */
     private void initDataAwal() {
         tambahProduk(new Product("BRG001", "Americano", 18000, 50));
         tambahProduk(new Product("BRG002", "Caffe Latte", 25000, 40));

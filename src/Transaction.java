@@ -4,13 +4,14 @@ import java.util.Locale;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-/**
- * Class Transaction - Menyimpan data transaksi yang sudah selesai
- * 
- * Objek Transaction bersifat immutable (tidak diubah setelah dibuat).
- * Menyimpan snapshot dari item-item yang dibeli, total, bayar, kembalian,
- * dan waktu transaksi.
- */
+/*
+Class Transaction - Menyimpan data transaksi yang sudah selesai
+ 
+Objek Transaction bersifat immutable (tidak diubah setelah dibuat).
+Menyimpan snapshot dari item-item yang dibeli, total, bayar, kembalian,
+dan waktu transaksi.
+*/
+
 public class Transaction {
 
     private String idTransaksi;        // ID unik transaksi (TRX0001, TRX0002, dst)
@@ -44,12 +45,13 @@ public class Transaction {
     public double getKembalian() { return kembalian; }
     public String getWaktu() { return waktu; }
 
-    /**
-     * Helper static method untuk format angka ke Rupiah
-     * Dipakai di beberapa tempat saat menampilkan harga
-     */
+    /*
+    Helper static method untuk format angka ke Rupiah
+    Dipakai di beberapa tempat saat menampilkan harga
+    */
+    
     public static String formatRupiah(double amount) {
-        NumberFormat nf = NumberFormat.getCurrencyInstance(new Locale("id", "ID"));
+        NumberFormat nf = NumberFormat.getCurrencyInstance(Locale.of("id", "ID"));
         return nf.format(amount);
     }
 }
