@@ -54,6 +54,7 @@ public class POSApp {
                     break;
                 default:
                     System.out.println("  [!] Menu tidak valid. Masukkan angka 1-5.");
+                    tungguEnter();
             }
         }
         scanner.close();
@@ -72,6 +73,11 @@ public class POSApp {
         } catch (Exception e) {
             for (int i = 0; i < 50; i++) System.out.println();
         }
+    }
+
+    private static void tungguEnter() {
+        System.out.print("\n  Tekan ENTER untuk melanjutkan...");
+        scanner.nextLine();
     }
 
     private static void tampilkanHeader() {
@@ -303,6 +309,7 @@ public class POSApp {
         if (queueManager.isEmpty()) {
             System.out.println("\n  [!] Antrean kosong!");
             System.out.println("  Silakan tambah pelanggan ke antrean terlebih dahulu (Menu 2).");
+            tungguEnter();
             return;
         }
 
@@ -546,6 +553,7 @@ public class POSApp {
     private static void menuRiwayat() {
         System.out.println("\n  === RIWAYAT TRANSAKSI ===");
         trxManager.tampilkanRiwayat();
+        tungguEnter();
     }
 
     // ==================== UTILITAS INPUT ====================
